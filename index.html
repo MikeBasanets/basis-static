@@ -44,18 +44,17 @@
                 <tr>
                     <td>Какую одежду вы ищете?</td>
                     <td>
-                        <select id="purposeOption" name="purpose">
+                        <select id="designationOption" name="designation">
                             <option value="casual">Повседневную</option>
-                            <option value="beach">Для пляжа</option>
                             <option value="sport">Спортивную</option>
                             <option value="office">Для офиса</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
-                    <td>Ваш год рождения:</td>
+                    <td>Сколько вам лет?:</td>
                     <td>
-                        <input type="number" name="birthdayYear" value="2000" min="1900" max="2030">
+                        <input type="number" name="age" value="21" min="0" max="200">
                     </td>
                 </tr>
                 <tr>
@@ -72,21 +71,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Рост в сантиметрах:</td>
+                    <td>Бюджет для гардероба в рублях:</td>
                     <td>
-                        <input type="number" name="heightCm" value="175" min="0" max="1000">
-                    </td>
-                </tr>
-                <tr>
-                    <td>Вес в килограммах:</td>
-                    <td>
-                        <input type="number" name="weightKg" value="75" min="0" max="1000">
+                        <input type="number" name="budget" value="2500" min="1500" max="10000">
                     </td>
                 </tr>
                 <tr>
                     <td>Предпочитаемая посадка одежды:</td>
                     <td>
-                        <select name="fit">
+                        <select name="preferredFit">
                             <option value="loose">Свободная</option>
                             <option value="regular">По размеру</option>
                             <option value="slim">Приталенная</option>
@@ -96,9 +89,10 @@
                 <tr>
                     <td>Любимая цветовая гамма:</td>
                     <td>
-                        <select name="colorScheme">
+                        <select name="favouriteColorScheme">
                             <option value="monochrome">Монохромная</option>
                             <option value="pastel">Пастельная</option>
+                            <option value="earth">Земельные тона</option>
                         </select>
                     </td>
                 </tr>
@@ -123,22 +117,22 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    function makeRow(s1, s2) {
-        return "".concat("<td> <img src=", s2, " height=280>", " <br> <a href=", s1 + ">" + "Cсылка </a>", " </td>");
+    function makeRow(pageUrl, imageUrl, description, brand, price) {
+        return "".concat("<td> <img src=", imageUrl, " height=280>", " <br> <a href=", pageUrl, ">", description, " ", brand, ", ", price, " Руб. </a>", " </td>");
     }
 
     function refreshTable(table, data) {
         $("#" + table + " td").remove();
         $("#" + table + " tbody").append("<tr>");
         $.each(data, function (i, item) {
-            $("#" + table + " tbody").append(makeRow(item.page, item.image))
+            $("#" + table + " tbody").append(makeRow(item.pageUrl, item.imageUrl, item.description, item.brand, item.price))
         })
         $("#" + table + " tbody").append("</tr>");
     }
 
     $(document).ready(function () {
         $("button").click(function () {
-            $.get("https://basis.clothing/submit-quiz",
+            $.get("https://api.basis.clothing/submit-quiz",
                 $('form').serialize(),
                 function (data, status) {
                     refreshTable("outerwearTable", data.outerwear)
